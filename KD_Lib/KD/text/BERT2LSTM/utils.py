@@ -16,7 +16,7 @@ from torch.utils.data import (
     TensorDataset,
     random_split,
 )
-from torchtext.legacy import data
+from torchtext import data
 from tqdm import tqdm
 
 

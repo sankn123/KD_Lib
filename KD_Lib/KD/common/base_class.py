@@ -186,13 +186,15 @@ class BaseClass:
             epoch_loss = 0.0
             correct = 0
 
-            for (data, label) in self.train_loader:
+            for (input,tti,mask, label) in self.train_loader:
 
-                data = data.to(self.device)
+                input = input.to(self.device)
+                tti = tti.to(self.device)
+                mask = mask.to(self.device)
                 label = label.to(self.device)
 
-                student_out = self.student_model(data)
-                teacher_out = self.teacher_model(data)
+                student_out = self.student_model(input,mask)
+                teacher_out = self.teacher_model(input,tti,mask)
 
                 loss = self.calculate_kd_loss(student_out, teacher_out, label)
 
@@ -280,10 +282,12 @@ class BaseClass:
         outputs = []
 
         with torch.no_grad():
-            for data, target in self.val_loader:
-                data = data.to(self.device)
+            for input,tti,mask, target in self.val_loader:
+                input = input.to(self.device)
+                tti = tti.to(self.device)
+                mask = mask.to(self.device)
                 target = target.to(self.device)
-                output = model(data)
+                output = model(input,mask)
 
                 if isinstance(output, tuple):
                     output = output[0]
